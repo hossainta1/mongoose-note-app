@@ -28,12 +28,20 @@ usersRoutes.post("/create-user", async (req: Request, res: Response) => {
 
     // console.log(body, "Zod Body")
 
-    // const user = await User.create(body);
+  //  Built in custom instance methods
 
-    const user = new User(body);
-   const password = await user.hashPassword(body.password);
-   user.password = password
-    await user.save();
+    //   const user = new User(body);
+    //  const password = await user.hashPassword(body.password);
+    //  user.password = password
+    //   await user.save();
+
+    // Built in custom static method
+
+
+    const password = await User.hashPassword(body.password);
+    body.password = password
+
+     const user = await User.create(body);
 
     res.status(201).json({
       success: true,

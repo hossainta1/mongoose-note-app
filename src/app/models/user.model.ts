@@ -3,6 +3,7 @@ import {
   IAddress,
   IUser,
   UserInstanceMethod,
+  UserStaticMethod,
 } from "../interfaces/user.interface";
 import validator from "validator";
 
@@ -19,7 +20,7 @@ const addressSchema = new Schema<IAddress>(
   }
 );
 
-const userSchema = new Schema<IUser, Model<IUser>, UserInstanceMethod>(
+const userSchema = new Schema<IUser, UserStaticMethod, UserInstanceMethod>(
   {
     firstName: {
       type: String,
@@ -85,9 +86,14 @@ const userSchema = new Schema<IUser, Model<IUser>, UserInstanceMethod>(
 
 userSchema.method("hashPassword", async function(plainPassword: string){
    const password = await bcrypt.hash(plainPassword, 10);
-   this.password = password
    return password
 
 });
 
-export const User = model("User", userSchema);
+userSchema.static("hashPassword", async function(plainPassword: string){
+   const password = await bcrypt.hash(plainPassword, 10);
+   return password
+
+});
+
+export const User = model<IUser, UserStaticMethod>("User", userSchema);

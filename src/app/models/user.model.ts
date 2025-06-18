@@ -8,6 +8,7 @@ import {
 import validator from "validator";
 
 import bcrypt from "bcryptjs";
+import { Note } from "./notes.model";
 
 const addressSchema = new Schema<IAddress>(
   {
@@ -84,16 +85,44 @@ const userSchema = new Schema<IUser, UserStaticMethod, UserInstanceMethod>(
   }
 );
 
-userSchema.method("hashPassword", async function(plainPassword: string){
-   const password = await bcrypt.hash(plainPassword, 10);
-   return password
+userSchema.method("hashPassword", async function (plainPassword: string) {
+  const password = await bcrypt.hash(plainPassword, 10);
+  return password;
+});
+
+userSchema.static("hashPassword", async function (plainPassword: string) {
+  const password = await bcrypt.hash(plainPassword, 10);
+  return password;
+});
+
+// pre hooks
+
+// document middleware
+
+userSchema.pre("save", async function (next) {
+  this.password = await bcrypt.hash(this.password, 10);
+  next()
+});
+
+// query middleware
+
+userSchema.pre("find", function (next) {
+  next()
 
 });
 
-userSchema.static("hashPassword", async function(plainPassword: string){
-   const password = await bcrypt.hash(plainPassword, 10);
-   return password
+// post hook
+userSchema.post("save", function (doc, next) {
+  console.log(`${doc.email} has been saved`);
+  next()
+});
 
+// Query middleware
+userSchema.post("findOneAndDelete", async function (doc, next) {
+  if (doc) {
+    await Note.deleteMany({ user: doc._id });
+  }
+  next()
 });
 
 export const User = model<IUser, UserStaticMethod>("User", userSchema);

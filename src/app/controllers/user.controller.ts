@@ -28,7 +28,7 @@ usersRoutes.post("/create-user", async (req: Request, res: Response) => {
 
     // console.log(body, "Zod Body")
 
-  //  Built in custom instance methods
+    //  Built in custom instance methods
 
     //   const user = new User(body);
     //  const password = await user.hashPassword(body.password);
@@ -37,11 +37,10 @@ usersRoutes.post("/create-user", async (req: Request, res: Response) => {
 
     // Built in custom static method
 
+    // const password = await User.hashPassword(body.password);
+    // body.password = password;
 
-    const password = await User.hashPassword(body.password);
-    body.password = password
-
-     const user = await User.create(body);
+    const user = await User.create(body);
 
     res.status(201).json({
       success: true,
@@ -79,7 +78,8 @@ usersRoutes.get("/:userId", async (req: Request, res: Response) => {
 });
 usersRoutes.delete("/:userId", async (req: Request, res: Response) => {
   const userId = req.params.userId;
-  const user = await User.findByIdAndDelete(userId);
+  // const user = await User.findByIdAndDelete(userId);
+  const user = await User.findByIdAndDelete({_id : userId});
 
   res.status(201).json({
     success: true,

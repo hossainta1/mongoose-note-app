@@ -22,6 +22,7 @@
     "express": "^5.1.0",
     "mongoose": "^8.15.2",
     "validator": "^13.15.15",
-    "validatorjs": "^3.22.1"
+    "validatorjs": "^3.22.1",
+    "zod": "^3.25.67"
   }
 }

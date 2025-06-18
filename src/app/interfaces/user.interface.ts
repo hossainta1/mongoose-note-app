@@ -1,13 +1,8 @@
-
 export interface IAddress {
-    city: string,
-    street: string,
-    zip: number
-  };
-
-
-
-
+  city: string;
+  street: string;
+  zip: number;
+}
 
 export interface IUser {
   firstName: string;
@@ -17,5 +12,9 @@ export interface IUser {
   password: string;
   role: "USER" | "ADMIN" | "SUPERADMIN";
 
-  address: IAddress
+  address: IAddress;
+}
+
+export interface UserInstanceMethod {
+  hashPassword(password: string): string;
 }
